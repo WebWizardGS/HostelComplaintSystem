@@ -21,14 +21,13 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
 </head>
 <body class="viewwarden">
     <nav class="navbar navbar-expand-md justify-content-between navcolor">
     
     <div class="inst">
-        <a class="navbar-brand" href="#"><img class="profile" src="iit1.jfif" alt=""></a>
-        IIT BHU
+        <a class="navbar-brand" href="#"><img class="profile" src="iit1.png" alt=""></a>
+        SGSITS
     </div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -59,26 +58,31 @@
         </div>
     </div>
 </nav>
-    <br><br><br>
-    <form action="/view_complaints_warden" method="post">
-        Sort On Basis Of:<br>
-        Room No: <input type="radio" name="cat" id="" value="room_no">
-        ID: <input type="radio" name="cat" id="" value="student_ref_id">
-        Category:  <input type="radio" name="cat" id="" value="category"><br>
-
-        Type:<br>
-        Asc: <input type="radio" name="type" id="" value="ASC">
-        Desc: <input type="radio" name="type" id="" value="DESC"><br>
-        <button type="submit" name="submit" value="sort">SORT</button>
+    <br>
+    <form action="/view_complaints_warden" method="post" class="fo">
+        <select name="cat" id="cat" class="ward">
+            <option value="basis">Basis Of</option>
+            <option value="room_no">Room No</option>
+            <option value="student_ref_id">ID</option>
+            <option value="category">Category</option>
+        </select>
+        <select name="type" id="type" class="ward">
+            <option value="basis">Type</option>
+            <option value="ASC">ASC</option>
+            <option value="Desc">Desc</option>
+        </select>
+        <button type="submit" name="submit" value="sort" class="btn btn-large tic">SORT</button>
     </form>
     <br><br>
     <form action="/view_complaints_warden" method="post">
-        FILTER BASED ON:
-        Category Water <input type="radio" name="cat" value="Water">
-        Category Food <input type="radio" name="cat" value="Food">
-        Category Electricity <input type="radio" name="cat" value="Electricity">
-        Category Hygiene <input type="radio" name="cat" value="Hygine"><br>
-        <button type="submit" name="submit" value="filter"> FILTER</button>
+        <select name="cat" id="cat" class="ward">
+            <option value="basis">Basis Of</option>
+            <option value="Water">Category Water</option>
+            <option value="Food">Category Food</option>
+            <option value="Electricity">Category Electricity</option>
+            <option value="Hygine">Category Hygiene</option>
+        </select>
+        <button type="submit" name="submit" value="filter" class="btn btn-large tic"> FILTER</button>
     </form>
     <br><br>
     <div class="tablecss">
@@ -107,11 +111,11 @@
                     <th>
                         Status
                     </th>
-                    <th>
-                        Escalate
-                    </th>
                     <th class="changestatus">
                         Change Status
+                    </th>
+                    <th>
+                        Escalate
                     </th>
                 </tr>
             </thead>
@@ -126,11 +130,6 @@
                         <td><button class="<%= ele.status %> btn btn-large"><%= ele.status %></button></td>
                         
                         <td>
-                            <form action="/view_complaints_warden" method="post">
-                                <button type="submit" class="btn btn-large buttoncss" name="submit" value=<%=ele.complaint_id%> >Escalate</button>
-                            </form>
-                        </td>
-                        <td>
                             <form action="/view_complaints_warden2" method="post">
                                 <select name="status" id="status">
                                     <option value="Solved">Choose Status</option>
@@ -139,6 +138,11 @@
                                     <option value="Pending">Pending</option>
                                 </select>
                                 <button type="submit" name="submit" class="btn btn-large buttonbg" value=<%=ele.complaint_id%>>Change</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/view_complaints_warden" method="post">
+                                <button type="submit" class="btn btn-large buttoncss" name="submit" value=<%=ele.complaint_id%> >Escalate</button>
                             </form>
                         </td>
                     </tr>

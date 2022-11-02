@@ -41,6 +41,8 @@ div.item{
 }
 button.tic{
     margin-top: 2%;
+    background-color: rgba(81,89,194,0.8);
+    text-decoration: none;
 }
 a#raise{
     color: white;
@@ -88,10 +90,10 @@ a#raise{
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color: #fcd9d9;
+    background-color:  #886efa;
 }
 .styled-table tbody tr:nth-of-type(odd) {
-    background-color: #fca5a5;
+    background-color: #b7aefb;
 }
 
 .styled-table tbody tr:last-of-type {
@@ -111,12 +113,11 @@ a#raise{
     background-color: rgb(33, 244, 33);
 }
 .s-ack{
-    background-color: #817dfd;
+    background-color: #f361e0;
 }
 
 .logoutbtn{
     
-    background-color: #d866a5;
     border-radius: 2%;
     margin-top: 8%;
     margin-bottom: 5px;
@@ -124,13 +125,14 @@ a#raise{
     padding: 2px; 
     padding-left: 10px;
     padding-right: 10px;
-    color: #FFCACA;
+    color: #fff;
     transition: box-shadow 0.3s;
-
+    background-color: rgba(81,89,194,0.8);
 }
 .logoutbtn:hover{
     box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.8);
-    background-color: #f79e9e;
     color: black;
 }
-
+a.navbar-brand{
+    color: #fff;
+}

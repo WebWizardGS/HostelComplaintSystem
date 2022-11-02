@@ -1,9 +1,9 @@
 body{
     background-color: #FFECEF;
     text-align: center;
-    /* background: url("bgimg3.png") ; */
-    background-image: linear-gradient( #e4f0fc,#93c2f3,#1679e2);
-    /* background-image: linear-gradient( to right ,#fdd9d9,#ffa9d8,#d866a5); */
+    background: url("backgrd.jpeg") ;
+    /* background-image: linear-gradient( #e4f0fc,#93c2f3,#1679e2); */
+    background-size: cover;
 }
 html{
     height: 100%;
@@ -13,19 +13,18 @@ img.profile{
     height: 2rem;
 }
 div.inst{
-    color: #251B37;
     margin-left: 2%;
+    color: #ffffff;
 }
 a.navbar-link{
     text-align: right;
 }
 nav{
 
-    background-color: #42246f;
-
+     background-color:rgba(81,89,194,0.8);
 }
 a.nav-link{
-    color: #FFCACA;
+    color: #ffffff;
 }
 div.right{
     text-align: right;
@@ -46,18 +45,20 @@ div.item{
     font-weight: bold;
 }
 button.tic{
-    margin-top: 2%;
+    background-color: rgba(81,89,194,0.8) ;
+    /* margin-top: 2%; */
+    color: white;
 }
 a#raise{
     color: white;
 }
-
+/* 
 .gradiant{
-    /* background-image: linear-gradient(to right,#fdd9d9,#ffa9d8,); */
-    /* border-bottom: 1px solid; */
+    background-image: linear-gradient(to right,#fdd9d9,#ffa9d8,);
+    border-bottom: 1px solid;
     background-color: #d866a5;
 
-}
+} */
 
 .stud-details{
   
@@ -69,11 +70,11 @@ a#raise{
       
 }
 
-.wardenhome{
+/* .wardenhome{
 
     background: url("bgimg3.png") ;
 
-}
+} */
 
 .styled-table {
     border-collapse: collapse;
@@ -94,7 +95,7 @@ a#raise{
     padding: 12px 15px;
 }
 .styled-table tbody tr {
-    border-bottom: 1px solid #f9ecec;
+    border-bottom: 2px solid #8c3bf0;
 }
 
 .styled-table tbody tr:nth-of-type(even) {
@@ -117,9 +118,9 @@ a#raise{
 
 select{
     display: inline-block;
-    padding: 9.5px;
+    padding: 9px;
     border-radius: 5%;
-    margin-right: 10%;
+    /* margin-right: 10%; */
 }
 
 .buttonbg{
@@ -157,7 +158,7 @@ th{
 
 .logoutbtn{
     
-    background-color: #d866a5;
+    background-color:rgba(81,89,194,0.8);
     border-radius: 2%;
     margin-top: 8%;
     margin-bottom: 5px;
@@ -165,12 +166,15 @@ th{
     padding: 2px; 
     padding-left: 10px;
     padding-right: 10px;
-    color: #FFCACA;
+    color: #FFF;
     transition: box-shadow 0.3s;
 
 }
 .logoutbtn:hover{
     box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.8);
-    background-color: #f79e9e;
-    color: black;
+    background-color:rgba(81,89,194,0.8);
+    color: white;
+}
+a.navbar-brand{
+    color: #fff;
 }
