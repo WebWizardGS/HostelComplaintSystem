@@ -24,12 +24,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 </head>
-<body>
-    <nav class="navbar navbar-expand-md navbar-light justify-content-between">
+<body class="bdy">
+    <nav class="navbar navbar-expand-md justify-content-between">
     
     <div class="inst">
-        <a class="navbar-brand" href="#"><img class="profile" src="iit1.jfif" alt=""></a>
-        IIT BHU
+        <a class="navbar-brand" href="#"><img class="profile" src="iit1.png" alt=""></a>
+        SGSITS
     </div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -63,25 +63,31 @@
 </nav>
     <br><br><br>
     <form action="/view_complaints_admin" method="post">
-        Sort On Basis Of:<br>
-        Room No: <input type="radio" name="cat" id="" value="room_no">
-        ID: <input type="radio" name="cat" id="" value="student_ref_id">
-        Category:  <input type="radio" name="cat" id="" value="category"><br>
-
-        Type:<br>
-        Asc: <input type="radio" name="type" id="" value="ASC">
-        Desc: <input type="radio" name="type" id="" value="DESC"><br>
-        <button type="submit" name="submit" value="sort">SORT</button>
+        <select name="cat" id="cat" class="ward">
+            <option value="basis">Basis Of</option>
+            <option value="room_no">Room No</option>
+            <option value="student_ref_id">ID</option>
+            <option value="category">Category</option>
+        </select>
+        <select name="type" id="type" class="ward">
+            <option value="basis">Type</option>
+            <option value="ASC">ASC</option>
+            <option value="Desc">DESC</option>
+        </select>
+        <button type="submit" name="submit" value="sort" class="btn btn-large tic">SORT</button>
     </form>
     <br><br>
     <form action="/view_complaints_admin" method="post">
-        FILTER BASED ON:
-        Category Water <input type="radio" name="cat" value="Water">
-        Category Food <input type="radio" name="cat" value="Food">
-        Category Electricity <input type="radio" name="cat" value="Electricity">
-        Category Hygiene <input type="radio" name="cat" value="Hygine"><br>
-        <button type="submit" name="submit" value="filter"> FILTER</button>
+        <select name="cat" id="cat" class="ward">
+            <option value="basis">Basis Of</option>
+            <option value="Water">Category Water</option>
+            <option value="Food">Category Food</option>
+            <option value="Electricity">Category Electricity</option>
+            <option value="Hygine">Category Hygiene</option>
+        </select>
+        <button type="submit" name="submit" value="filter" class="btn btn-large tic"> FILTER</button>
     </form>
+    <br><br><br>
     <div class="tablecss">
     <table class="styled-table">
 
