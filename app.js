@@ -13,7 +13,16 @@ app.set('view engine', 'ejs');
 
 //
 app.get("/",function(req,res){
-	res.sendFile(__dirname +"/loginPage.html");
+    client.query(`call auto_esc()`,(err,res2)=>{
+        if(err){
+            console.log(err);
+            res.send(err);
+        }
+        else{
+            res.sendFile(__dirname + "/loginPage.html");
+        }
+    })
+
 });
 
 app.get("/register_student", function (req, res) {
@@ -25,12 +34,12 @@ app.get("/register_warden", function (req, res) {
 
 app.get("/studentHome",function(req,res){
 	// res.sendFile(__dirname + "/studentHome.html");
-    client.query(`select student_name,hostel_ref_id,room_no from student where student_id='${globalid}'`,function(err,res2){
+    client.query(`select student_name,hostel_ref_id,room_no,warden_cont from student ,warden ,hostel where hostel_ref_id = hostel_id and warden_ref_id = warden_id and student_id='${globalid}'`,function(err,res2){
         if(err){
             res.send("<h1>" + err.message +"</h1>");
         }
         else{
-            res.render("studentHome", { name:res2.rows[0].student_name, roomno:res2.rows[0].room_no , hname:res2.rows[0].hostel_ref_id });
+            res.render("studentHome", { name:res2.rows[0].student_name, roomno:res2.rows[0].room_no , hname:res2.rows[0].hostel_ref_id, wcont:res2.rows[0].warden_cont });
         }
     })
     
