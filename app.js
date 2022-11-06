@@ -14,6 +14,16 @@ app.set('view engine', 'ejs');
 //curr date
 var datetime = new Date();
 console.log(datetime);
+//Email-send
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth:{
+        user: 'miniprojectgithub@gmail.com',
+        // pass: 'Hostel@2022'
+        pass: 'xlkzajttkepkrfjn'
+    }
+});
 
 //
 app.get("/",function(req,res){
@@ -26,7 +36,16 @@ app.get("/",function(req,res){
             res.sendFile(__dirname + "/loginPage.html");
         }
     })
-
+    // var mailOptions = {
+    //     from: 'miniprojectgithub@gmail.com',
+    //     to: 'abhinavjain20002@gmail.com',
+    //     subject: 'Demo',
+    //     text: `This is demo email.`
+    // };
+    // transporter.sendMail(mailOptions,(err,info)=>{
+    //     if(err) console.log(err);
+    //     else console.log("email sent");
+    // });
 });
 
 app.get("/register_student", function (req, res) {
@@ -241,7 +260,7 @@ const client = new Client({
     host:"localhost",
     user:"postgres",
     port:5432,
-    password:"abhijeet",
+    password:"Abhisql",
     database:"Hosteldb"
 })
 client.connect();
@@ -582,6 +601,33 @@ app.post("/view_my_complaints", function(req,res){
             }
         })
     }
+})
+
+app.post("/send_mail",function(req,res){
+    let c_id = req.body.submit;
+    client.query(`select * from complaints where complaint_id = '${c_id}'`,(err2,res2)=>{
+        if(err2) console.log(err2)
+        else{
+            client.query(`select * from utility where category = '${res2.rows[0].category}'`, (err3, res3) => {
+                if (err3) console.log(err3)
+                else {
+                    var mailOptions = {
+                        from: 'miniprojectgithub@gmail.com',
+                        to: res3.rows[0].email,
+                        subject: res2.rows[0].title,
+                        text: 'Description: '+res2.rows[0].description+'\n\nRoom No: '+res2.rows[0].room_no+'\n\nHostel Id: '+res2.rows[0].hostel_ref_id
+                    };
+                    transporter.sendMail(mailOptions, (err4, info) => {
+                        if (err4) console.log(err4);
+                        else{
+                            console.log("email sent");
+                            res.send("<h1>Email Send Successfully.</h1>")
+                        } 
+                    });
+                }
+            })
+        }
+    })
 })
 
 app.listen(3000, function () {

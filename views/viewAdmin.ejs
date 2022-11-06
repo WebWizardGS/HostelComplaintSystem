@@ -118,6 +118,9 @@
             <th class="changestatus">
                 Change Status
             </th>
+            <th>
+                Send Email
+            </th>
         </tr>
         
             <% arr.forEach(function(ele){ %>
@@ -139,6 +142,11 @@
                                 <option value="Pending">Pending</option>
                             </select>
                             <button type="submit" class="btn btn-large buttonbg" name="submit" class="btn btn-large buttonbg" value=<%=ele.complaint_id%>>Change</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/send_mail" method="post">
+                            <button type="submit" class="btn btn-large buttoncss" name="submit" value=<%=ele.complaint_id%> >Send Mail</button>
                         </form>
                     </td>
                 </tr>

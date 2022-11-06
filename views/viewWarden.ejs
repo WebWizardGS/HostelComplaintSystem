@@ -117,6 +117,9 @@
                     <th>
                         Escalate
                     </th>
+                    <th>
+                        Send Mail
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -143,6 +146,11 @@
                         <td>
                             <form action="/view_complaints_warden" method="post">
                                 <button type="submit" class="btn btn-large buttoncss" name="submit" value=<%=ele.complaint_id%> >Escalate</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/send_mail" method="post">
+                                <button type="submit" class="btn btn-large buttoncss" name="submit" value=<%=ele.complaint_id%> >Send Mail</button>
                             </form>
                         </td>
                     </tr>
