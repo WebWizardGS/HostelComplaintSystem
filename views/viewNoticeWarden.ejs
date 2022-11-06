@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<style>
+    table, th, td ,tr{
+        border:1px solid black;
+        padding: 20px;
+    }
+</style>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DashBoard</title>
-    
+    <title>Document</title>
     <!-- Style sheets CSS and bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="styles_student.css">
@@ -14,11 +21,12 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
+    <script>
+        document.q
+    </script>
 </head>
 <body>
-    
-<nav class="navbar navbar-expand-md  justify-content-between ">
+    <nav class="navbar navbar-expand-md justify-content-between">
     
     <div class="inst">
         <a class="navbar-brand" href="#"><img class="profile" src="iit1.png" alt=""></a>
@@ -32,63 +40,66 @@
         <ul class="navbar-nav ml-auto ms-auto">
             <li class="nav-item active">
                 <div class="right">
-                    <a class="nav-link" href="/studentHome">Home</a>
+                    <a class="nav-link" href="/wardenHome">Home</a>
                 </div>
             </li>
             <li class="nav-item">
                 <div class="right">
-                    <a class="nav-link" href="/generate_complaint">Raise Ticket</a>
+                    <a class="nav-link" href="/view_complaints_warden">View Complaints</a>
                 </div>
             </li>
             <li class="nav-item">
                 <div class="right">
-                    <a class="nav-link" href="/view_notice">Notice</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <div class="right">
-                    <!--  -->
-                    <form action="/logout" method="post">
-                        <button class="logoutbtn" name="logoutbtn" value="logout">Log Out</button>
-                    </form>
-                    
+                    <a class="nav-link" href="#">Notice</a>
                 </div>
             </li>
         </ul>
-        <!-- <div class="right">
-            <form action="/studentHome" method="post">
-                <label for="status"><img src="profile1.jpg" class="profile" alt=""></label> -->
-                <!-- <select name="status" id="status">
-                    <option value="Solved"><img src="profile1.jpg" class="profile" alt=""></option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Pending">Pending</option>
-                </select><br> -->
-                <!-- <button class="btn btn-lg btn-dark tic" name="logoutbtn" value="logout">logout</button> -->
-            <!-- </form>
-        </div> -->
-        <!-- <div class="right">
-            <a href="https://www.google.com/" ><img src="profile1.jpg" class="profile" alt=""></a>    
-        </div> -->
+        <div class="right">
+            <form action="/logout" method="post">
+                <button class="logoutbtn" name="logoutbtn" value="logout">Log Out</button>
+            </form>
+        </div>
     </div>
 </nav>
+    <br><br><br>
+     <table class="styled-table">
+        <thead>
+            <tr>
+                <th>
+                     notice description
+                </th>
+                
+                <th>
+                    notice owner
+                </th>
 
+                <th>
+                    delete notice
+                </th>
 
-<div class="details stud-details">
-    <h1>
-        Hello <%=name%>
-    </h1>
-    <div class="item">Room No: <%=roomno%>  </div>
-    <div class="item">Hostel Name: <%=hname%> </div>
-    <div class="item">contact: <%=wcont%> </div>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <% arr.forEach(function(ele){ %>
+                <tr>
+                    <td><%= ele.description %></td>
+                    <td><%= ele.owner %></td>
+                    <!-- <td><%= ele.title %></td>
+                    <td><%= ele.description %></td>
+                    <td><%= ele.student_ref_id %></td>
+                    <td><%= ele.hostel_ref_id %></td> --> 
+                    <!-- <td><button class="<%= ele.status %> btn btn-large"><%= ele.status %></button></td> -->
+                    <!-- <td><%= ele.room_no %></td> -->
+                     <td>
+                        <form action="/view_notice_warden" method="post">
+                            <button class=" btn btn-large s-ack" type="submit" name="ack" value=<%=ele.notice_id%> >delete notice</button>
+                        </form>
+                    </td> 
+                </tr>
+            <% }) %>
+        </tbody>
 
-</div>
-
-<button class="btn btn-lg tic"><a href="/generate_complaint" id="raise">Raise Ticket</a></button>
-<br>
-<button class="btn btn-lg tic"><a href="/view_my_complaints" id="raise">View My Complaints</a></button>
-
-<button class="btn btn-lg tic"><a href="/view_notice" id="raise">View Notice</a></button>
-
-
+    </table> 
 </body>
 </html>
