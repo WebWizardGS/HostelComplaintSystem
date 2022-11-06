@@ -17,15 +17,15 @@ console.log(datetime);
 
 //
 app.get("/",function(req,res){
-    // client.query(`call auto_esc()`,(err,res2)=>{
-    //     if(err){
-    //         console.log(err);
-    //         res.send(err);
-    //     }
-    //     else{
+    client.query(`call auto_esc()`,(err,res2)=>{
+        if(err){
+            console.log(err);
+            res.send(err);
+        }
+        else{
             res.sendFile(__dirname + "/loginPage.html");
-    //     }
-    // })
+        }
+    })
 
 });
 
