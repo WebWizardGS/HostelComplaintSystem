@@ -11,6 +11,10 @@ app.use(express.static('img'));
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+//curr date
+var datetime = new Date();
+console.log(datetime);
+
 //
 app.get("/",function(req,res){
     client.query(`call auto_esc()`,(err,res2)=>{
@@ -44,6 +48,144 @@ app.get("/studentHome",function(req,res){
     })
     
 });
+//warden post notice
+//post notice get method
+
+app.get("/post_notice_warden",function(req,res){
+
+    res.sendFile(__dirname + "/postNoticeWarden.html")
+
+})
+
+//post notice post method
+
+app.post("/post_notice_warden",function(req,res){
+
+    let desc = req.body.notice;
+    
+    client.query(`insert into notice values('${desc}','${globalid}')`,function(err,res2){
+        if(err){
+            res.send(err.message);
+        }
+        else{
+            res.redirect("/wardenHome");
+        }
+    })
+
+})
+
+//admin post notice
+
+app.get("/post_notice_admin",function(req,res){
+
+    res.sendFile(__dirname + "/postNoticeAdmin.html")
+
+})
+
+app.post("/post_notice_admin",function(req,res){
+
+    let desc = req.body.notice;
+    
+    client.query(`insert into notice values('${desc}','${globalid}')`,function(err,res2){
+        if(err){
+            res.send(err.message);
+        }
+        else{
+            res.redirect("/adminHome");
+        }
+    })
+
+})
+
+// view notice student
+
+app.get("/view_notice",function(req,res){
+    if(globalid==''){
+        res.redirect("/");
+    }
+    else{
+    client.query(`select * from notice where owner = 'adminbal' or owner = (select distinct(warden_ref_id) from hostel where hostel_id=(select hostel_ref_id from student where student_id='${globalid}'));`,function(err,res2){
+        if(err){
+            console.log(err.message);
+        }
+        else{
+            res.render("viewNoticeStudent", {arr:res2.rows});    
+        }
+    })
+    }
+
+})
+
+app.get("/view_notice_warden",function(req,res){
+    if(globalid==''){
+        res.redirect("/");
+    }
+    else{
+        console.log(globalid)
+        client.query(`select * from notice where owner = '${globalid}'`,function(err,res2){
+        if(err){
+            console.log(err.message);
+        }
+        else{
+            res.render("viewNoticeWarden", {arr:res2.rows});    
+        }
+    })
+    }
+
+})
+
+
+app.post("/view_notice_warden", function(req,res){
+    let id = req.body.ack;
+    if(globalid==''){
+        res.redirect("/");
+    }
+    else{
+        client.query(`delete from notice where notice_id = '${id}'`, function(err,res2){
+            if(err){
+                res.send("<h1>"+err.message+"</h1>");
+            }
+            else{
+                res.redirect("/view_notice_warden");
+            }
+        })
+    }
+})
+
+app.get("/view_notice_admin",function(req,res){
+    if(globalid==''){
+        res.redirect("/");
+    }
+    else{
+        // console.log(globalid)
+        client.query(`select * from notice`,function(err,res2){
+        if(err){
+            console.log(err.message);
+        }
+        else{
+            res.render("viewNoticeAdmin", {arr:res2.rows});    
+        }
+    })
+    }
+
+})
+
+app.post("/view_notice_admin", function(req,res){
+    let id = req.body.ack;
+    if(globalid==''){
+        res.redirect("/");
+    }
+    else{
+        client.query(`delete from notice where notice_id = '${id}'`, function(err,res2){
+            if(err){
+                res.send("<h1>"+err.message+"</h1>");
+            }
+            else{
+                res.redirect("/view_notice_admin");
+            }
+        })
+    }
+})
 
 //
 app.post("/logout",function(req,res){
@@ -99,7 +241,7 @@ const client = new Client({
     host:"localhost",
     user:"postgres",
     port:5432,
-    password:"Abhisql",
+    password:"abhijeet",
     database:"Hosteldb"
 })
 client.connect();
