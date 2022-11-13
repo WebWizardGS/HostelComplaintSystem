@@ -66,3 +66,12 @@ a{
   background-color: #f79e9e;
   color: black;
 }
+.selectcss{
+  border-radius: 5px;
+  padding: 3px;
+}
+.eye{
+  position: relative;
+  left: 100%;
+  bottom: 2rem;
+}

@@ -517,7 +517,28 @@ app.post('/view_complaints_admin',function(req,res){
                     res.send("<h1>" + err.message + "</h1>");
                 }
                 else {
-                    res.redirect("/view_complaints_admin");
+                    client.query(`select * from student where student_id = (select student_ref_id from complaints where complaint_id='${id}')`, function (err3, res3) {
+                        if (err3) {
+                            console.log(err3.message);
+                            res.send(err3.message);
+                        }
+                        else {
+                            var mailOptions = {
+                                from: 'miniprojectgithub@gmail.com',
+                                to: res3.rows[0].email,
+                                subject: 'Complaint status changed to ' + st,
+                                text: 'Complaint id: ' + id + '\n\nCurrent Status: ' + st + '\n\nName: ' + res3.rows[0].student_name + '\n\nRoom No: ' + res3.rows[0].room_no
+                            };
+                            transporter.sendMail(mailOptions, (err4, info) => {
+                                if (err4) console.log(err4);
+                                else {
+                                    console.log("email sent");
+                                    res.send("<h1>Email Send Successfully.</h1>");
+                                }
+                            });
+                            res.redirect("/view_complaints_admin");
+                        }
+                    })
                 }
             })
         }
@@ -575,12 +596,35 @@ app.post("/view_complaints_warden2", function(req,res){
         res.redirect("/");
     }
     else{
+
         client.query(`update complaints set status = '${st}' where complaint_id = '${id}'`, function(err,res2){
             if(err){
                 res.send("<h1>"+err.message+"</h1>");
             }
             else{
-                res.redirect("/view_complaints_warden");
+                client.query(`select * from student where student_id = (select student_ref_id from complaints where complaint_id='${id}')`,function(err3,res3){
+                    if(err3){
+                        console.log(err3.message);
+                        res.send(err3.message);
+                    }
+                    else{
+                        var mailOptions = {
+                            from: 'miniprojectgithub@gmail.com',
+                            to: res3.rows[0].email,
+                            subject: 'Complaint status changed to ' + st,
+                            text: 'Complaint id: ' + id + '\n\nCurrent Status: ' + st + '\n\nName: ' + res3.rows[0].student_name + '\n\nRoom No: ' + res3.rows[0].room_no
+                        };
+                        transporter.sendMail(mailOptions, (err4, info) => {
+                            if (err4) console.log(err4);
+                            else {
+                                console.log("email sent");
+                                res.send("<h1>Email Send Successfully.</h1>");
+                            }
+                        });
+                        res.redirect("/view_complaints_warden");
+                    }
+                    
+                })
             }
         })
     }
@@ -626,6 +670,31 @@ app.post("/send_mail",function(req,res){
                     });
                 }
             })
+        }
+    })
+})
+
+app.get('/forgotPassword',function(req,res){
+    res.sendFile(__dirname+'/forgotPassword.html');
+})
+app.post('/forgotPassword',function(req,res){
+    id = req.body.id;
+    client.query(`select * from student where student_id = '${id}'`, (err2, res2) => {
+        if (err2) console.log(err3)
+        else {
+            var mailOptions = {
+                from: 'miniprojectgithub@gmail.com',
+                to: res2.rows[0].email,
+                subject: 'Password',
+                text: 'Your Password is '+ res2.rows[0].student_passwd
+            };
+            transporter.sendMail(mailOptions, (err4, info) => {
+                if (err4) console.log(err4);
+                else {
+                    console.log("email sent");
+                }
+            });
+            res.redirect('/');
         }
     })
 })
