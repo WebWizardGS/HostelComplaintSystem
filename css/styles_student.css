@@ -90,10 +90,10 @@ a#raise{
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color:  #EFFFFD;
+    background-color:  #daf4f1;
 }
 .styled-table tbody tr:nth-of-type(odd) {
-    background-color: #B8FFF9;
+    background-color: #8ddcd6;
 }
 
 .styled-table tbody tr:last-of-type {

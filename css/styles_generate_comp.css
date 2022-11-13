@@ -110,3 +110,19 @@ textarea{
 div.inst{
     color: #fff;
 }
+
+
+.forgot{
+  margin-top: 20%;
+  margin-left: 40%;
+  /* padding-left: 100px ; */
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.forgot1{
+  font-family:'Courier New', Courier, monospace;
+}
+
+.center{
+  margin-left: 120px;
+}
