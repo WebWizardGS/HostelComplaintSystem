@@ -11,6 +11,17 @@ app.use(express.static('img'));
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+//Email-send
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth:{
+        user: 'miniprojectgithub@gmail.com',
+        // pass: 'Hostel@2022'
+        pass: 'xlkzajttkepkrfjn'
+    }
+});
+
 //curr date
 var datetime = new Date();
 console.log(datetime);
@@ -36,6 +47,16 @@ app.get("/",function(req,res){
             res.sendFile(__dirname + "/loginPage.html");
         }
     })
+    // var mailOptions = {
+    //     from: 'miniprojectgithub@gmail.com',
+    //     to: 'abhinavjain20002@gmail.com',
+    //     subject: 'Demo',
+    //     text: `This is demo email.`
+    // };
+    // transporter.sendMail(mailOptions,(err,info)=>{
+    //     if(err) console.log(err);
+    //     else console.log("email sent");
+    // });    
     // var mailOptions = {
     //     from: 'miniprojectgithub@gmail.com',
     //     to: 'abhinavjain20002@gmail.com',
@@ -260,7 +281,7 @@ const client = new Client({
     host:"localhost",
     user:"postgres",
     port:5432,
-    password:"abhijeet",
+    password:"Abhisql",
     database:"Hosteldb"
 })
 client.connect();
@@ -340,8 +361,9 @@ app.post("/register_student", function (req, res) {
     let s_roomno = req.body.roomno;
     let s_passwd = req.body.passwd;
     let s_cpasswd = req.body.cpasswd;
+    let s_email = req.body.email
     if(s_passwd==s_cpasswd){
-        client.query(`insert into student values('${s_id}','${s_name}','${s_passwd}','${s_gender}','${s_contno}','${s_hostelid}','${s_roomno}')`,(err,res2)=>{
+        client.query(`insert into student values('${s_id}','${s_name}','${s_passwd}','${s_gender}','${s_contno}','${s_hostelid}','${s_roomno}','${s_email}')`,(err,res2)=>{
             if(err) console.log(err.message);
             else{
                 console.log("Successfully added.");
@@ -649,6 +671,11 @@ app.post("/view_my_complaints", function(req,res){
 
 app.post("/send_mail",function(req,res){
     let c_id = req.body.submit;
+    client.query(`select * from complaints where `)
+})
+
+app.post("/send_mail",function(req,res){
+    let c_id = req.body.submit;
     client.query(`select * from complaints where complaint_id = '${c_id}'`,(err2,res2)=>{
         if(err2) console.log(err2)
         else{
@@ -691,7 +718,7 @@ app.post('/forgotPassword',function(req,res){
             transporter.sendMail(mailOptions, (err4, info) => {
                 if (err4) console.log(err4);
                 else {
-                    console.log("email sent");
+                    console.log("email sent to registered email.");
                 }
             });
             res.redirect('/');
