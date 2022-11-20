@@ -1,11 +1,18 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('css'));
 app.use(express.static('img'));
-
+app.use(session({
+    secret: 'secretKey1',
+    resave: false,
+    saveUninitialized: true
+}));
+app.use(cookieParser());
 //ejs
 
 app.set('views', './views');
@@ -24,7 +31,6 @@ var transporter = nodemailer.createTransport({
 
 //curr date
 var datetime = new Date();
-console.log(datetime);
 //Email-send
 var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
@@ -47,26 +53,6 @@ app.get("/",function(req,res){
             res.sendFile(__dirname + "/loginPage.html");
         }
     })
-    // var mailOptions = {
-    //     from: 'miniprojectgithub@gmail.com',
-    //     to: 'abhinavjain20002@gmail.com',
-    //     subject: 'Demo',
-    //     text: `This is demo email.`
-    // };
-    // transporter.sendMail(mailOptions,(err,info)=>{
-    //     if(err) console.log(err);
-    //     else console.log("email sent");
-    // });    
-    // var mailOptions = {
-    //     from: 'miniprojectgithub@gmail.com',
-    //     to: 'abhinavjain20002@gmail.com',
-    //     subject: 'Demo',
-    //     text: `This is demo email.`
-    // };
-    // transporter.sendMail(mailOptions,(err,info)=>{
-    //     if(err) console.log(err);
-    //     else console.log("email sent");
-    // });
 });
 
 app.get("/register_student", function (req, res) {
@@ -78,7 +64,7 @@ app.get("/register_warden", function (req, res) {
 
 app.get("/studentHome",function(req,res){
 	// res.sendFile(__dirname + "/studentHome.html");
-    client.query(`select student_name,hostel_ref_id,room_no,warden_cont from student ,warden ,hostel where hostel_ref_id = hostel_id and warden_ref_id = warden_id and student_id='${globalid}'`,function(err,res2){
+    client.query(`select student_name,hostel_ref_id,room_no,warden_cont from student ,warden ,hostel where hostel_ref_id = hostel_id and warden_ref_id = warden_id and student_id='${req.session.gid}'`,function(err,res2){
         if(err){
             res.send("<h1>" + err.message +"</h1>");
         }
@@ -103,7 +89,7 @@ app.post("/post_notice_warden",function(req,res){
 
     let desc = req.body.notice;
     
-    client.query(`insert into notice values('${desc}','${globalid}')`,function(err,res2){
+    client.query(`insert into notice values('${desc}','${req.session.gid}')`,function(err,res2){
         if(err){
             res.send(err.message);
         }
@@ -126,7 +112,7 @@ app.post("/post_notice_admin",function(req,res){
 
     let desc = req.body.notice;
     
-    client.query(`insert into notice values('${desc}','${globalid}')`,function(err,res2){
+    client.query(`insert into notice values('${desc}','${req.session.gid}')`,function(err,res2){
         if(err){
             res.send(err.message);
         }
@@ -140,11 +126,11 @@ app.post("/post_notice_admin",function(req,res){
 // view notice student
 
 app.get("/view_notice",function(req,res){
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
-    client.query(`select * from notice where owner = 'adminbal' or owner = (select distinct(warden_ref_id) from hostel where hostel_id=(select hostel_ref_id from student where student_id='${globalid}'));`,function(err,res2){
+        client.query(`select * from notice where owner = 'adminbal' or owner = (select distinct(warden_ref_id) from hostel where hostel_id=(select hostel_ref_id from student where student_id='${req.session.gid}'));`,function(err,res2){
         if(err){
             console.log(err.message);
         }
@@ -157,12 +143,12 @@ app.get("/view_notice",function(req,res){
 })
 
 app.get("/view_notice_warden",function(req,res){
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
-        console.log(globalid)
-        client.query(`select * from notice where owner = '${globalid}'`,function(err,res2){
+        console.log(req.session.gid)
+        client.query(`select * from notice where owner = '${req.session.gid}'`,function(err,res2){
         if(err){
             console.log(err.message);
         }
@@ -177,7 +163,7 @@ app.get("/view_notice_warden",function(req,res){
 
 app.post("/view_notice_warden", function(req,res){
     let id = req.body.ack;
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
@@ -193,11 +179,11 @@ app.post("/view_notice_warden", function(req,res){
 })
 
 app.get("/view_notice_admin",function(req,res){
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
-        // console.log(globalid)
+        // console.log(req.session.gid)
         client.query(`select * from notice`,function(err,res2){
         if(err){
             console.log(err.message);
@@ -212,7 +198,7 @@ app.get("/view_notice_admin",function(req,res){
 
 app.post("/view_notice_admin", function(req,res){
     let id = req.body.ack;
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
@@ -233,14 +219,14 @@ app.post("/logout",function(req,res){
     var lo = req.body.logoutbtn;
 
     if(lo == 'logout'){
-        globalid = '';
+        req.session.gid = '';
         res.redirect("/");
     }
 
 })
 
 app.get("/adminHome",function(req,res){
-    client.query(`select admin_name from admin where admin_id='${globalid}'`, function (err, res2) {
+    client.query(`select admin_name from admin where admin_id='${req.session.gid}'`, function (err, res2) {
         if (err) {
             res.send("<h1>" + err.message + "</h1>");
         }
@@ -251,12 +237,12 @@ app.get("/adminHome",function(req,res){
 });
 
 app.get("/wardenHome",function(req,res){
-    client.query(`select warden_name from warden where warden_id='${globalid}'`, function (err2, res2) {
+    client.query(`select warden_name from warden where warden_id='${req.session.gid}'`, function (err2, res2) {
         if (err2) {
             res.send("<h1>" + err2.message + "</h1>");
         }
         else {
-            client.query(`select hostel_id from hostel where warden_ref_id='${globalid}'`, function (err3, res3) {
+            client.query(`select hostel_id from hostel where warden_ref_id='${req.session.gid}'`, function (err3, res3) {
                 if (err3) {
                     res.send("<h1>" + err3.message + "</h1>");
                 }
@@ -286,15 +272,15 @@ const client = new Client({
 })
 client.connect();
 
-var globalid;
 
 app.post('/',function(req,res){
     var p = req.body.whoami;
-    var p_id = req.body.stdid;
+    req.session.gid = req.body.stdid;
     var p_passwd = req.body.passwd;
-    globalid=p_id;
+    
     if(p=='std'){
-        client.query(`select student_passwd from student where student_id = '${p_id}'`, (err, res2) => {
+        console.log(req.session.gid)
+        client.query(`select student_passwd from student where student_id = '${req.session.gid}'`, (err, res2) => {
             // console.log(res2);
             if(err) console.log(err.message);
             else if (res2.rowCount == 0){
@@ -312,7 +298,7 @@ app.post('/',function(req,res){
         
     }
     else if(p=='adm'){
-        client.query(`select admin_passwd from admin where admin_id = '${p_id}'`, (err, res2) => {
+        client.query(`select admin_passwd from admin where admin_id = '${req.session.gid}'`, (err, res2) => {
             // console.log(res2);
             if (err) console.log(err.message);
             else if (res2.rowCount == 0) {
@@ -329,7 +315,7 @@ app.post('/',function(req,res){
         })
     }
     else if(p=='wrd'){
-        client.query(`select warden_passwd from warden where warden_id = '${p_id}'`, (err, res2) => {
+        client.query(`select warden_passwd from warden where warden_id = '${req.session.gid}'`, (err, res2) => {
             // console.log(res2);
             if (err) console.log(err.message);
             else if (res2.rowCount == 0) {
@@ -419,11 +405,12 @@ app.post("/generate_complaint",function(req,res){
     let desc = req.body.desc;
     let hid;
     let rno;
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
-    client.query(`select hostel_ref_id,room_no from student where student_id = '${globalid}'`,(err1,res1)=>{
+        console.log(req.session);
+        client.query(`select hostel_ref_id,room_no from student where student_id = '${req.session.gid}'`,(err1,res1)=>{
         if(err1) {
             console.log(err1.message)
             res.send(err1.message);
@@ -431,7 +418,7 @@ app.post("/generate_complaint",function(req,res){
         else{
             hid = res1.rows[0].hostel_ref_id;
             rno= res1.rows[0].room_no;
-            client.query(`insert into complaints(category,description,student_ref_id,hostel_ref_id,status,title,room_no,auth,ack) values('${cat}','${desc}','${globalid}','${hid}','Pending','${title}',${rno},'Warden','No')`, function (err2, res2) {
+            client.query(`insert into complaints(category,description,student_ref_id,hostel_ref_id,status,title,room_no,auth,ack) values('${cat}','${desc}','${req.session.gid}','${hid}','Pending','${title}',${rno},'Warden','No')`, function (err2, res2) {
                 if (err2) {
                     console.log(err2.message);
                 }
@@ -450,11 +437,11 @@ app.post("/generate_complaint",function(req,res){
 
 // var myid = 'satvik12';
 app.get('/view_my_complaints', function(req,res){
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
-    client.query(`select * from complaints where student_ref_id = '${globalid}'`,function(err2,res2){
+        client.query(`select * from complaints where student_ref_id = '${req.session.gid}'`,function(err2,res2){
         if(err2){
             console.log(err2.message);
         }
@@ -467,11 +454,11 @@ app.get('/view_my_complaints', function(req,res){
 
 
 app.get('/view_complaints_warden',function(req,res){
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
-        client.query(`select * from Complaints where auth='Warden' and hostel_ref_id = (select hostel_id from hostel where warden_ref_id = '${globalid}')`, function(err,res2){
+        client.query(`select * from Complaints where auth='Warden' and hostel_ref_id = (select hostel_id from hostel where warden_ref_id = '${req.session.gid}')`, function(err,res2){
         if(err){
             console.log(err.message);
             res.send(err.message);
@@ -485,7 +472,7 @@ app.get('/view_complaints_warden',function(req,res){
 
 
 app.get('/view_complaints_admin',function(req,res){
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
@@ -502,7 +489,7 @@ app.get('/view_complaints_admin',function(req,res){
 })
 
 app.post('/view_complaints_admin',function(req,res){
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
@@ -568,14 +555,14 @@ app.post('/view_complaints_admin',function(req,res){
 })
 
 app.post('/view_complaints_warden',function(req,res){
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
         if(req.body.submit=='sort'){
             let cat = req.body.cat;
             let type = req.body.type;
-            client.query(`select * from Complaints where auth='Warden' and hostel_ref_id = (select hostel_id from hostel where warden_ref_id = '${globalid}') ORDER BY ${cat} ${type}`, function (err, res2) {
+            client.query(`select * from Complaints where auth='Warden' and hostel_ref_id = (select hostel_id from hostel where warden_ref_id = '${req.session.gid}') ORDER BY ${cat} ${type}`, function (err, res2) {
                 if (err) {
                     console.log(err.message);
                     res.send(err.message);
@@ -587,7 +574,7 @@ app.post('/view_complaints_warden',function(req,res){
         }
         else if(req.body.submit=='filter'){
             let cat = req.body.cat;
-            client.query(`select * from Complaints where auth='Warden' and hostel_ref_id = (select hostel_id from hostel where warden_ref_id = '${globalid}' and category='${cat}')`, function (err, res2) {
+            client.query(`select * from Complaints where auth='Warden' and hostel_ref_id = (select hostel_id from hostel where warden_ref_id = '${req.session.gid}' and category='${cat}')`, function (err, res2) {
                 if (err) {
                     console.log(err.message);
                     res.send(err.message);
@@ -614,7 +601,7 @@ app.post('/view_complaints_warden',function(req,res){
 app.post("/view_complaints_warden2", function(req,res){
     id = req.body.submit;
     st = req.body.status;
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
@@ -654,7 +641,7 @@ app.post("/view_complaints_warden2", function(req,res){
 
 app.post("/view_my_complaints", function(req,res){
     let id = req.body.ack;
-    if(globalid==''){
+    if (req.session.gid ==''){
         res.redirect("/");
     }
     else{
